@@ -5,7 +5,7 @@ from pathlib import Path
 from tqdm import tqdm
 from pydub import AudioSegment
 
-from src.utils.speech_to_text import SpeechToText
+from app.stt.stt import SpeechToText
 
 CURRENT_DIR = Path(__file__).parent
 AUDIO_DIR = CURRENT_DIR.joinpath("audios")
@@ -20,20 +20,22 @@ def get_random_split_dir() -> str:
 
 
 def transcribe_data():
-    stt = SpeechToText(model="medium.en", device="cuda")
+    stt = SpeechToText()
     audios = []
     texts = []
     duratoin = 0
     for audio in tqdm(list(AUDIO_DIR.glob("*.mp3"))):
         aus = AudioSegment.from_file(audio)
-        duratoin += aus.duration_seconds
         txt = stt.whisper_func(str(audio))
+        if txt.strip() == "":
+            continue
+        duratoin += aus.duration_seconds
         split = get_random_split_dir()
         shutil.copy(audio, DATASET_DIR.joinpath(split).joinpath(audio.name))
         audios.append(f"{split}/{audio.name}")
         texts.append(txt.strip())
 
-    df = pd.DataFrame({"audio": audios, "text": texts})
+    df = pd.DataFrame({"file_name": audios, "sentence": texts})
     df.to_csv(DATASET_DIR.joinpath("metadata.csv"), index=None)
     print(duratoin)
 

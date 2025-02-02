@@ -132,20 +132,20 @@ def compute_metrics(pred):
 
 
 training_args = Seq2SeqTrainingArguments(
-    output_dir="./whisper-tiny-lr",  # change to a repo name of your choice
+    output_dir="./whisper_tiny-lr",  # change to a repo name of your choice
     per_device_train_batch_size=16,
     gradient_accumulation_steps=1,  # increase by 2x for every 2x decrease in batch size
     learning_rate=1e-5,
     warmup_steps=100,
-    max_steps=20,
+    max_steps=5000,
     gradient_checkpointing=True,
     fp16=True,
     eval_strategy="steps",
     per_device_eval_batch_size=8,
     predict_with_generate=True,
     generation_max_length=225,
-    save_steps=10,
-    eval_steps=10,
+    save_steps=100,
+    eval_steps=100,
     logging_steps=25,
     report_to=["tensorboard"],
     load_best_model_at_end=True,
