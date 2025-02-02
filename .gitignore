@@ -1,0 +1,17 @@
+*venv
+postgres
+logs
+audios
+.env
+whisper_models
+.idea
+__pycache__/
+stt.env
+k6.env
+root.env
+.pytest_cache
+test/data
+.vscode
+*_onnx
+whisper_*
+leranit
